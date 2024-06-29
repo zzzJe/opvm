@@ -35,7 +35,7 @@ cli
             console.error(`❌ You don't have Optifine version '${ver}'`);
             return;
         }
-        if (!check_java_installed()) {
+        if (!await check_java_installed()) {
             console.error(`☕ Cannot detect avaliable java path`);
             return;
         }
