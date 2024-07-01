@@ -1,8 +1,8 @@
-import axios from 'axios';
 import { parse } from 'node-html-parser';
 import Parser from './../util/parser.js';
 
-const raw_html_content = (await axios.get('https://optifine.net/downloads')).data;
+const fetch_response = await fetch('https://optifine.net/downloads');
+const raw_html_content = await fetch_response.text();
 const download_tables = parse(raw_html_content)
     .querySelectorAll('.downloadTable');
 
@@ -45,7 +45,8 @@ for (const [index, version] of versions.entries()) {
 
     archive_download_url_map
         .set(package_version[index], async () => {
-            const raw_html = (await axios.get(download_anchors[index])).data;
+            const fetch_response = await fetch(download_anchors[index]);
+            const raw_html = await fetch_response.text();
             const parsed_html = parse(raw_html);
             const url = 'https://optifine.net/' + parsed_html.querySelector('.downloadButton a').rawAttributes.href;
             return url;

@@ -1,14 +1,13 @@
-import axios from 'axios';
 import storage from './storage.js';
 
 async function download_archive_to_static(url, filename) {
-    const response = await axios({
-        method: 'get',
-        url: url,
-        responseType: 'stream'
-    });
-    await storage.add(filename, response.data);
-};
+    try {
+        const response = await fetch(url);
+        await storage.add(filename, response.body);
+    } catch (error) {
+        // console.error(`Failed to download and store the file ${filename}:`, error);
+    }
+}
 
 export {
     download_archive_to_static,

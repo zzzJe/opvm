@@ -1,5 +1,7 @@
 import { readFile, writeFile, readdir, unlink } from 'node:fs/promises';
 import { createWriteStream } from 'node:fs';
+import { pipeline } from 'node:stream';
+import { promisify } from 'node:util';
 import { download_target_dir, base_name, join } from '../util/path.js';
 import parser from './../util/parser.js';
 import { is_valid_minecraft_dir } from '../util/check.js';
@@ -62,11 +64,7 @@ async function add(name, stream) {
     }
     const file_target = join(download_target_dir, `${name}.jar`);
     const file_stream = createWriteStream(file_target);
-    stream.pipe(file_stream);
-    await new Promise((resolve, reject) => {
-        file_stream.on('finish', resolve);
-        file_stream.on('error', reject);
-    });
+    await promisify(pipeline)(stream, file_stream);
     installed_packages.add(name);
     await update_ver();
 }
