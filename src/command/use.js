@@ -46,8 +46,10 @@ cli
                 await storage.use(ver);
                 return;
             }
-            if (launcher_profile_before.profiles.OptiFine.lastVersionId.replace('-OptiFine', '') === ver)
+            if (launcher_profile_before.profiles.OptiFine.lastVersionId.replace('-OptiFine', '') === ver) {
+                console.error(`⚠ The Optifine version has already been applied`);
                 return;
+            }
             await run_optifine_jar(ver);
             const launcher_profile_after = JSON.parse((await readFile(join(storage.minecraft_dir(), 'launcher_profiles.json'))).toString());
             // if (launcher_profile_before?.profiles?.OptiFine?.lastVersionId
